@@ -1,0 +1,9 @@
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
+
+# Enable Flake's "E" and "F" codes by default.
+select = ["E", "F"]
+ignore = []
