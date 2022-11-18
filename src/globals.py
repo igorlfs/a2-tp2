@@ -1,5 +1,3 @@
-"""
-Constantes globais.
-"""
+"""Constantes globais."""
 EUCLIDIAN = "euclidian"
 MANHATTAN = "manhattan"

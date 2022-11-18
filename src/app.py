@@ -1,4 +1,4 @@
-"""Rode o programa principal."""
+"""Programa principal."""
 import networkx as nx
 import numpy as np
 
@@ -8,7 +8,6 @@ from src.util import calculate_distance, generator
 
 def run() -> None:
     """Gere instâncias, rode os algoritmos e colete as métricas."""
-
     # 1. Gerar um conjunto de pontos
     my_points: np.array = generator(5)
 
