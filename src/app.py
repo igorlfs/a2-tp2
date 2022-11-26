@@ -9,7 +9,7 @@ from src.util import calculate_distance, generator
 def run() -> None:
     """Gere instâncias, rode os algoritmos e colete as métricas."""
     # 1. Gerar um conjunto de pontos
-    my_points: np.array = generator(5)
+    my_points: set = generator(5)
 
     # 2. Calcular as distâncias entre os pontos
     my_matrix: np.array = calculate_distance(my_points, g.EUCLIDIAN)
@@ -21,3 +21,8 @@ def run() -> None:
 
     # 4. Rodar algum dos algoritmos no grafo
     # 4.1 Retornar tempo, espaço, qualidade da solução
+
+
+# |%%--%%| <gDoipSYU4P|fIqtZuwjKb>
+
+run()

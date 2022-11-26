@@ -3,34 +3,39 @@ from random import randint
 
 import numpy as np
 import scipy.spatial.distance as dist
-from numba import njit
 
 from src.globals import MANHATTAN
 
 FLOOR = 0
 CEILING = 10
+SIZE = CEILING - FLOOR + 1
 
 
-@njit
-def generator(number_of_points: int) -> np.array:
+def generator(number_of_points: int) -> set:
     """Gera uma lista de tamanho `number_of_points` de pontos aleatórios."""
-    points: np.array = np.zeros((number_of_points, 2), dtype=np.int32)
-    for i in range(number_of_points):
-        points[i][0] = randint(FLOOR, CEILING)
-        points[i][1] = randint(FLOOR, CEILING)
+    if number_of_points > SIZE * SIZE:
+        raise Exception("Muitos pontos para pouco espaço!")
+
+    points: set = set()
+
+    while len(points) < number_of_points:
+        x_coord = randint(FLOOR, CEILING)
+        y_coord = randint(FLOOR, CEILING)
+        point = (x_coord, y_coord)
+        if point not in points:
+            points.add(point)
+
     return points
 
 
-def calculate_distance(points: np.array, distance: str) -> np.array:
+def calculate_distance(points: set, distance: str) -> np.array:
     """Calcula as distâncias entre os `points` e as armazena numa matriz de adjacência."""
-    size: int = np.size(points, axis=0)
+    size: int = len(points)
     adjacency_matrix: np.array = np.zeros((size, size))
-    for i in range(size):
-        for j in range(i):
+    for i, p in enumerate(points):
+        for j, q in enumerate(points):
             distance: float = (
-                dist.cityblock(points[i], points[j])
-                if distance == MANHATTAN
-                else dist.euclidean(points[i], points[j])
+                dist.cityblock(p, q) if distance == MANHATTAN else dist.euclidean(p, q)
             )
             adjacency_matrix[i][j] = distance
     return adjacency_matrix
