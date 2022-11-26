@@ -1,6 +1,7 @@
 """Gere o conjunto de pontos e calcule as distâncias entre eles."""
 from random import randint
 
+import networkx as nx
 import numpy as np
 import scipy.spatial.distance as dist
 
@@ -39,3 +40,12 @@ def calculate_distance(points: set, distance: str) -> np.array:
             )
             adjacency_matrix[i][j] = distance
     return adjacency_matrix
+
+
+def calculate_cost(vertices: list[int], graph: nx.Graph) -> float:
+    """Calcula o custo de percorrer o caminho `vertices` em `graph`."""
+    cost: float = 0
+    size: int = len(vertices)
+    for i in vertices:
+        cost += graph[i % size][(i + 1) % size]["weight"]
+    return cost
