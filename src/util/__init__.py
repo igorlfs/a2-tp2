@@ -1,4 +1,7 @@
 # pylint: disable=missing-docstring
-from .util import calculate_cost, calculate_distance, generator
+from .util import calculate_cost, generate_instances
 
-__all__ = ["generator", "calculate_distance", "calculate_cost"]
+__all__ = [
+    "calculate_cost",
+    "generate_instances",
+]
