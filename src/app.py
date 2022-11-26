@@ -2,7 +2,6 @@
 import networkx as nx
 import numpy as np
 
-import src.globals as g
 from src.util import calculate_distance, generator
 
 
