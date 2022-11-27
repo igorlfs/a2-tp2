@@ -18,7 +18,8 @@ def christofides(graph: nx.Graph) -> float:
     odd_degree_vertices: list[int] = [node for (node, val) in mst.degree if val % 2 == 1]
     odd_graph: nx.Graph = nx.induced_subgraph(graph, odd_degree_vertices)
     matching: list[tuple[int, int]] = nx.min_weight_matching(odd_graph)
-    eulerian_multigraph: nx.MultiGraph = nx.MultiGraph(mst)
+    eulerian_multigraph: nx.MultiGraph = nx.MultiGraph()
+    eulerian_multigraph.add_edges_from(mst.edges)
     eulerian_multigraph.add_edges_from(matching)
     edges: list[tuple[int, int]] = list(nx.eulerian_circuit(eulerian_multigraph, 0))
     nodes: list[int] = [0]

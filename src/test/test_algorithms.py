@@ -55,7 +55,7 @@ def test_christofides() -> None:
 
 def test_christofides_complex() -> None:
     """Gere uma matriz usando as funções do programa e compare ambas implementações."""
-    points = generate_points(6)
+    points = generate_points(2**8)
     matrix = calculate_distance(points, True)
     graph: nx.Graph = nx.from_numpy_array(matrix)
     expected_cycle: list[int] = nx_app.christofides(graph)
