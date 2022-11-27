@@ -3,7 +3,7 @@ import networkx as nx
 import networkx.algorithms.approximation as nx_app
 import numpy as np
 
-from src.algorithms import christofides, twice_around_the_tree
+from src.algorithms import tsp_solver
 
 
 def test_twice_around_the_tree() -> None:
@@ -18,14 +18,14 @@ def test_twice_around_the_tree() -> None:
         ]
     )
 
-    my_graph: nx.Graph = nx.from_numpy_array(matrix)
-    cost: float = twice_around_the_tree(my_graph)
+    graph: nx.Graph = nx.from_numpy_array(matrix)
+    cost: float = tsp_solver(1, graph)
 
     assert cost == 39
 
 
 def get_networx_christofides_cost(graph: nx.Graph) -> float:
-    """Calcule o custo do TSP pela implementação do christofides do networkx."""
+    """Calcule o custo do TSP pela implementação do Christofides do networkx."""
     cycle: list[tuple[int, int]] = nx_app.christofides(graph)
     edge_list: list = list(nx.utils.pairwise(cycle))
     expected_cost = 0
@@ -49,11 +49,11 @@ def test_christofides() -> None:
             [1, 2, 1, 1, 0],
         ]
     )
-    my_graph: nx.Graph = nx.from_numpy_array(matrix)
+    graph: nx.Graph = nx.from_numpy_array(matrix)
 
-    expected_cost: float = get_networx_christofides_cost(my_graph)
+    expected_cost: float = get_networx_christofides_cost(graph)
 
-    actual_cost: float = christofides(my_graph)
+    actual_cost: float = tsp_solver(2, graph)
 
     assert expected_cost == actual_cost
 
@@ -72,10 +72,10 @@ def test_christofides_pt2() -> None:
             [35, 35, 12, 0],
         ]
     )
-    my_graph: nx.Graph = nx.from_numpy_array(matrix)
+    graph: nx.Graph = nx.from_numpy_array(matrix)
 
-    expected_cost: float = get_networx_christofides_cost(my_graph)
+    expected_cost: float = get_networx_christofides_cost(graph)
 
-    actual_cost: float = christofides(my_graph)
+    actual_cost: float = tsp_solver(2, graph)
 
     assert expected_cost == actual_cost

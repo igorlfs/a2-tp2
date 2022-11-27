@@ -6,7 +6,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-from src.algorithms import christofides, twice_around_the_tree
+from src.algorithms import tsp_matcher, tsp_solver
 from src.calculate import calculate_distance
 
 COORDINATES_FLOOR = 0
@@ -40,42 +40,24 @@ def generate_instances() -> pd.DataFrame:
     df: pd.DataFrame = pd.DataFrame(
         columns=["Instância", "Algoritmo", "Distância", "Tempo", "Custo"]
     )
-    for i in range(INSTANCE_FLOOR, INSTANCE_CEIL):
+    for i in range(INSTANCE_FLOOR, 8):
         points: set = generate_points(2**i)
         for j in (True, False):
             matrix: np.array = calculate_distance(points, j)
             graph: nx.Graph = nx.from_numpy_array(matrix)
 
-            dist_type: str = "Euclidiana" if j else "Manhattan"
-
             # TODO: retornar espaço
-            start: float = time.time()
-            cost: float = twice_around_the_tree(graph)
-            end: float = time.time()
-            diff_time: float = end - start
-            df = pd.concat(
-                [
-                    pd.DataFrame(
-                        [[i, "Twice Around The Tree", dist_type, diff_time, cost]],
-                        columns=df.columns,
-                    ),
-                    df,
-                ],
-                ignore_index=True,
-            )
-
-            start: float = time.time()
-            cost: float = christofides(graph)
-            end: float = time.time()
-            diff_time: float = end - start
-            df = pd.concat(
-                [
-                    pd.DataFrame(
-                        [[i, "Christofides", dist_type, diff_time, cost]],
-                        columns=df.columns,
-                    ),
-                    df,
-                ],
-                ignore_index=True,
-            )
+            for k in range(1, 3):
+                measure_algorithm(k, graph, df, j, i)
     return df
+
+
+def measure_algorithm(k: int, graph: nx.Graph, df: pd.DataFrame, j: int, i: int) -> None:
+    """Realiza a medição de um algoritmo em uma instância."""
+    dist_type: str = "Euclidiana" if j else "Manhattan"
+    start: float = time.time()
+    cost: float = tsp_solver(k, graph)
+    algorithm: str = tsp_matcher(k)
+    end: float = time.time()
+    diff_time: float = end - start
+    df.loc[len(df)] = [i, algorithm, dist_type, diff_time, cost]
