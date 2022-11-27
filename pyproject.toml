@@ -21,4 +21,4 @@ select = [
     "RUF",
     "M",
 ]
-ignore = []
+ignore = ["D212"]
