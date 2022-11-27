@@ -19,9 +19,7 @@ def christofides(graph: nx.Graph) -> float:
     odd_graph: nx.Graph = nx.induced_subgraph(graph, odd_degree_vertices)
     matching: list[tuple[int, int]] = nx.min_weight_matching(odd_graph)
     eulerian_multigraph: nx.MultiGraph = nx.MultiGraph(mst)
-    for edge in matching:
-        weight: float = graph[edge[0]][edge[1]]["weight"]
-        eulerian_multigraph.add_edge(edge[0], edge[1], weight=weight)
+    eulerian_multigraph.add_edges_from(matching)
     cycle: list[int] = list(nx.dfs_preorder_nodes(eulerian_multigraph, 0))
     cycle.append(0)
     return calculate_cost(cycle, graph)
