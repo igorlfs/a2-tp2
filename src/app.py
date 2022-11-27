@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from src.util import generate_instances
+from src.generators import generate_instances
 
 
 def run() -> None:
