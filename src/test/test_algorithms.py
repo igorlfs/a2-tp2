@@ -2,8 +2,9 @@
 import networkx as nx
 import networkx.algorithms.approximation as nx_app
 import numpy as np
+import pytest
 
-from src.algorithms import tsp_solver
+from src.algorithms import tsp_matcher, tsp_solver
 
 
 def test_twice_around_the_tree() -> None:
@@ -79,3 +80,12 @@ def test_christofides_pt2() -> None:
     actual_cost: float = tsp_solver(2, graph)
 
     assert expected_cost == actual_cost
+
+
+def test_tsp_solver_exception() -> None:
+    """Capture exceções de tsp_solver e tsp_matcher."""
+    graph: nx.Graph = nx.Graph()
+    with pytest.raises(Exception, match="Esse algoritmo não existe"):
+        tsp_solver(4, graph)
+    with pytest.raises(Exception, match="Esse algoritmo não existe"):
+        tsp_matcher(4)
