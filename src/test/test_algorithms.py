@@ -54,13 +54,7 @@ def test_christofides() -> None:
 
 
 def test_christofides_complex() -> None:
-    """
-    Gere uma matriz usando as funções do programa e compare ambas implementações.
-
-    Como o algoritmo é aproximativo, é possível que exista alguma diferença no resultado,
-    devido ao fato de que, por exemplo, podem ter sido geradas diferentes MSTs,
-    então esse teste deve ser usado APENAS como referência.
-    """
+    """Gere uma matriz usando as funções do programa e compare ambas implementações."""
     points = generate_points(6)
     matrix = calculate_distance(points, True)
     graph: nx.Graph = nx.from_numpy_array(matrix)

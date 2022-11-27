@@ -20,6 +20,11 @@ def christofides(graph: nx.Graph) -> float:
     matching: list[tuple[int, int]] = nx.min_weight_matching(odd_graph)
     eulerian_multigraph: nx.MultiGraph = nx.MultiGraph(mst)
     eulerian_multigraph.add_edges_from(matching)
-    cycle: list[int] = list(nx.dfs_preorder_nodes(eulerian_multigraph, 0))
-    cycle.append(0)
-    return calculate_cost(cycle, graph)
+    edges: list[tuple[int, int]] = list(nx.eulerian_circuit(eulerian_multigraph, 0))
+    nodes: list[int] = [0]
+    for _, v in edges:
+        if v in nodes:
+            continue
+        nodes.append(v)
+    nodes.append(0)
+    return calculate_cost(nodes, graph)

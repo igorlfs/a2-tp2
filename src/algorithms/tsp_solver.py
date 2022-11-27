@@ -6,7 +6,7 @@ from src.algorithms import christofides, twice_around_the_tree
 
 def tsp_solver(i: int, graph: nx.Graph) -> float:
     """Enumera as soluções para o TSP."""
-    match i:  # noqa (ruff não suporta match)
+    match i:  # noqa: E999 (ruff não suporta match)
         case 1:
             return twice_around_the_tree(graph)
         case 2:
