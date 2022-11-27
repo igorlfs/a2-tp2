@@ -19,7 +19,7 @@ INSTANCE_CEIL = 11  # O método range é exclusivo em relação ao teto
 
 
 def generate_points(number_of_points: int) -> set:
-    """Gera uma lista de tamanho `number_of_points` de pontos aleatórios."""
+    """Gera um conjunto de tamanho `number_of_points` de pontos aleatórios."""
     if number_of_points > SIZE * SIZE:
         raise Exception("Muitos pontos para pouco espaço!")
 

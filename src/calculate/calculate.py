@@ -1,4 +1,4 @@
-"""Calcule distância e custos."""
+"""Calcule distância e custo de se percorrer um ciclo em um grafo."""
 
 import networkx as nx
 import numpy as np
@@ -6,7 +6,11 @@ import scipy.spatial.distance as dist
 
 
 def calculate_distance(points: set, euclidean: bool) -> np.array:
-    """Calcula as distâncias entre os `points` e as armazena numa matriz de adjacência."""
+    """
+    Calcula as distâncias entre os `points` e as armazena numa matriz de adjacência.
+
+    Use `euclidean` para decidir se a distância é euclidiana ou de Manhattan.
+    """
     size: int = len(points)
     adjacency_matrix: np.array = np.zeros((size, size))
     for i, p in enumerate(points):

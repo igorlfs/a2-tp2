@@ -3,8 +3,11 @@ import networkx as nx
 import networkx.algorithms.approximation as nx_app
 import numpy as np
 import pytest
+from numpy.testing import assert_almost_equal
 
 from src.algorithms import tsp_matcher, tsp_solver
+from src.calculate import calculate_cost, calculate_distance
+from src.generators import generate_points
 
 
 def test_twice_around_the_tree() -> None:
@@ -25,41 +28,7 @@ def test_twice_around_the_tree() -> None:
     assert cost == 39
 
 
-def get_networx_christofides_cost(graph: nx.Graph) -> float:
-    """Calcule o custo do TSP pela implementação do Christofides do networkx."""
-    cycle: list[tuple[int, int]] = nx_app.christofides(graph)
-    edge_list: list = list(nx.utils.pairwise(cycle))
-    expected_cost = 0
-    for edge in edge_list:
-        expected_cost += graph[edge[0]][edge[1]]["weight"]
-    return expected_cost
-
-
 def test_christofides() -> None:
-    """
-    Compare o resultado com a implementação do networkx.
-
-    Exemplo: https://en.wikipedia.org/wiki/Christofides_algorithm#Example
-    """
-    matrix: np.array = np.array(
-        [
-            [0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0],
-            [1, 1, 0, 0, 0],
-            [1, 1, 2, 0, 0],
-            [1, 2, 1, 1, 0],
-        ]
-    )
-    graph: nx.Graph = nx.from_numpy_array(matrix)
-
-    expected_cost: float = get_networx_christofides_cost(graph)
-
-    actual_cost: float = tsp_solver(2, graph)
-
-    assert expected_cost == actual_cost
-
-
-def test_christofides_pt2() -> None:
     """
     Compare o resultado com a implementação do networkx.
 
@@ -75,11 +44,31 @@ def test_christofides_pt2() -> None:
     )
     graph: nx.Graph = nx.from_numpy_array(matrix)
 
-    expected_cost: float = get_networx_christofides_cost(graph)
+    expected_cycle: list[int] = nx_app.christofides(graph)
+
+    expected_cost: float = calculate_cost(expected_cycle, graph)
 
     actual_cost: float = tsp_solver(2, graph)
 
     assert expected_cost == actual_cost
+
+
+def test_christofides_complex() -> None:
+    """
+    Gere uma matriz usando as funções do programa e compare ambas implementações.
+
+    Como o algoritmo é aproximativo, é possível que exista alguma diferença no resultado,
+    devido ao fato de que, por exemplo, podem ter sido geradas diferentes MSTs,
+    então esse teste deve ser usado APENAS como referência.
+    """
+    points = generate_points(6)
+    matrix = calculate_distance(points, True)
+    graph: nx.Graph = nx.from_numpy_array(matrix)
+    expected_cycle: list[int] = nx_app.christofides(graph)
+    expected_cost: float = calculate_cost(expected_cycle, graph)
+    actual_cost: float = tsp_solver(2, graph)
+
+    assert_almost_equal(actual_cost, expected_cost)
 
 
 def test_tsp_solver_exception() -> None:
