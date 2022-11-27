@@ -7,8 +7,9 @@ from src.calculate import calculate_cost
 def twice_around_the_tree(graph: nx.Graph) -> float:
     """Aproxime o caixeiro viajante para `graph` usando o `twice_around_the_tree`."""
     mst: nx.Graph = nx.minimum_spanning_tree(graph)
-    vertex_list: list[int] = list(nx.dfs_preorder_nodes(mst, 0))
-    return calculate_cost(vertex_list, graph)
+    cycle: list[int] = list(nx.dfs_preorder_nodes(mst, 0))
+    cycle.append(0)
+    return calculate_cost(cycle, graph)
 
 
 def christofides(graph: nx.Graph) -> float:
@@ -21,5 +22,6 @@ def christofides(graph: nx.Graph) -> float:
     for edge in matching:
         weight: float = graph[edge[0]][edge[1]]["weight"]
         eulerian_multigraph.add_edge(edge[0], edge[1], weight=weight)
-    vertex_list: list[int] = list(nx.dfs_preorder_nodes(eulerian_multigraph, 0))
-    return calculate_cost(vertex_list, graph)
+    cycle: list[int] = list(nx.dfs_preorder_nodes(eulerian_multigraph, 0))
+    cycle.append(0)
+    return calculate_cost(cycle, graph)

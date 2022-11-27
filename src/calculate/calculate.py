@@ -16,10 +16,9 @@ def calculate_distance(points: set, euclidean: bool) -> np.array:
     return adjacency_matrix
 
 
-def calculate_cost(vertices: list[int], graph: nx.Graph) -> float:
-    """Calcula o custo de percorrer o caminho `vertices` em `graph`."""
+def calculate_cost(cycle: list[int], graph: nx.Graph) -> float:
+    """Calcula o custo de se percorrer o ciclo `cycle` em `graph`."""
     cost: float = 0
-    size: int = len(vertices)
-    for i in vertices:
-        cost += graph[i % size][(i + 1) % size]["weight"]
+    for i in range(0, len(cycle) - 1):
+        cost += graph[cycle[i]][cycle[i + 1]]["weight"]
     return cost
