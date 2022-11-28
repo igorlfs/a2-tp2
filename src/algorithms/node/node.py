@@ -11,12 +11,14 @@ class Node:
         level: int,
         cost: float,
         sol: list[int],
+        weights: list[tuple[float, float, bool]],
     ) -> None:
         """Constrói um nó do Branch-and-Bound."""
         self.boundary = boundary
         self.level = level
         self.cost = cost
         self.sol = sol
+        self.weights = weights
 
     def __lt__(self: Node, other: Node) -> bool:
         """Compare duas Nodes usando o custo."""

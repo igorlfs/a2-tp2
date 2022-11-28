@@ -1,6 +1,5 @@
 # pylint: disable=missing-docstring
-from .algorithms import (bound, branch_and_bound, christofides,
-                         twice_around_the_tree)
+from .algorithms import branch_and_bound, christofides, twice_around_the_tree
 from .tsp_solver import tsp_matcher, tsp_solver
 
 __all__ = [
@@ -9,5 +8,4 @@ __all__ = [
     "tsp_solver",
     "tsp_matcher",
     "branch_and_bound",
-    "bound",
 ]
