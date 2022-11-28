@@ -39,20 +39,21 @@ def update_bound(
         return inf, []
     weight: float = graph[u][v]["weight"]
     min_weights: list[tuple[float, float, bool]] = node.weights.copy()
-    increment: float = 0
-    u_min = min_weights[u]
-    if weight > u_min[0]:
-        if not u_min[2]:
-            increment += weight - u_min[1]
-            min_weights[u] = (u_min[0], weight, True)
-        else:
-            increment += weight - u_min[0]
-    v_min = min_weights[v]
-    if weight > v_min[0]:
-        if not v_min[2]:
-            increment += weight - v_min[1]
-            min_weights[v] = (v_min[0], weight, True)
-        else:
-            increment += weight - v_min[0]
+    min_weights[u], increment = _update_bound_helper(weight, min_weights[u])
+    min_weights[v], other_increment = _update_bound_helper(weight, min_weights[v])
+    increment += other_increment
     boundary: float = node.boundary + ceil(increment / 2)
     return boundary, min_weights
+
+
+def _update_bound_helper(
+    weight: float, index_min: tuple[float, float, bool]
+) -> tuple[tuple[float, float, bool], float]:
+    increment: float = 0
+    if weight > index_min[0]:
+        if not index_min[2]:
+            increment += weight - index_min[1]
+            index_min = (index_min[0], weight, True)
+        else:
+            increment += weight - index_min[0]
+    return index_min, increment
