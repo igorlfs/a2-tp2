@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_almost_equal
 
-from src.algorithms import tsp_matcher, tsp_solver
+from src.algorithms import bound, tsp_matcher, tsp_solver, updateBound
 from src.calculate import calculate_cost, calculate_distance
 from src.generators import generate_points
 
@@ -72,3 +72,42 @@ def test_tsp_solver_exception() -> None:
         tsp_solver(4, graph)
     with pytest.raises(Exception, match="Esse algoritmo não existe"):
         tsp_matcher(4)
+
+
+def test_bound() -> None:
+    """Teste o bound usando o exemplo das aulas."""
+    matrix: np.array = np.array(
+        [
+            [0, 0, 0, 0, 0],
+            [3, 0, 0, 0, 0],
+            [1, 6, 0, 0, 0],
+            [5, 7, 4, 0, 0],
+            [8, 9, 2, 3, 0],
+        ]
+    )
+    graph: nx.Graph = nx.from_numpy_array(matrix)
+    min_weights: list[tuple[float, float, bool]] = []
+    boundary: int = bound(graph, min_weights)
+    weight = graph[0][3]["weight"]
+    assert boundary == 14
+
+    min_weights2, boundary2 = updateBound((0, 3, weight), min_weights, boundary)
+    assert boundary2 == 16
+
+    weight2 = graph[0][4]["weight"]
+    _, boundary3 = updateBound((0, 4, weight2), min_weights2, boundary2)
+    assert boundary3 == 22
+
+
+def test_branch_and_bound() -> None:
+    """Teste o branch and bound usando o exemplo das aulas."""
+    matrix: np.array = np.array(
+        [
+            [0, 0, 0, 0],
+            [20, 0, 0, 0],
+            [42, 30, 0, 0],
+            [35, 34, 12, 0],
+        ]
+    )
+    graph: nx.Graph = nx.from_numpy_array(matrix)
+    tsp_solver(3, graph)
