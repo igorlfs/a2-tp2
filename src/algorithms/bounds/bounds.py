@@ -10,7 +10,7 @@ def initial_bound(graph: nx.Graph) -> tuple[float, list[tuple[float, float, bool
     """
     Calcula um limite inferior para o TSP de `graph`.
 
-    Também retorne uma lista de tuplas com os
+    Também retorne uma lista de tuplas com os pesos mínimos de cada nó.
     """
     size: int = graph.number_of_nodes()
     boundary: float = 0
@@ -35,8 +35,6 @@ def update_bound(
 ) -> tuple[float, list[tuple[float, float, bool]]]:
     """Atualiza limite inferior após adicionar um vértice `v` na solução de `node`."""
     u: int = node.sol[-1]
-    if not graph.has_edge(u, v):
-        return inf, []
     weight: float = graph[u][v]["weight"]
     min_weights: list[tuple[float, float, bool]] = node.weights.copy()
     min_weights[u], increment = _update_bound_helper(weight, min_weights[u])

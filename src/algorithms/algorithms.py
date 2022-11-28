@@ -39,8 +39,8 @@ def christofides(graph: nx.Graph) -> float:
 def branch_and_bound(graph: nx.Graph) -> float:
     """Retorne o custo do TSP de `graph` usando o `branch_and_bound`."""
     n: int = graph.number_of_nodes()
-    boundary, weights = initial_bound(graph)
-    root: Node = Node(boundary, 1, 0, [0], weights)
+    boundary, min_weights = initial_bound(graph)
+    root: Node = Node(boundary, 1, 0, [0], min_weights)
     queue: list[Node] = [root]
     heapq.heapify(queue)
     best: float = inf
@@ -50,32 +50,37 @@ def branch_and_bound(graph: nx.Graph) -> float:
             if best > node.cost:
                 best = node.cost
         elif node.boundary < best:
-            cycle_bound, cycle_weights = update_bound(graph, 0, node)
             if node.level < n:
                 for k in range(1, n):
-                    new_bound, new_weights = update_bound(graph, k, node)
-                    if (
-                        k not in node.sol
-                        and graph.has_edge(node.sol[-1], k)
-                        and new_bound < best
-                    ):
-                        new_weight: float = graph[node.sol[-1]][k]["weight"]
-                        new_node: Node = Node(
-                            new_bound,
-                            node.level + 1,
-                            node.cost + new_weight,
-                            node.sol + [k],
-                            new_weights,
-                        )
+                    new_node = _branch_and_bound_helper(graph, k, node, best)
+                    if new_node is not None:
                         heapq.heappush(queue, new_node)
-            elif graph.has_edge(node.sol[-1], 0) and cycle_bound < best:
-                cycle_weight: float = graph[node.sol[-1]][0]["weight"]
-                cycle_node: Node = Node(
-                    cycle_bound,
-                    node.level + 1,
-                    node.cost + cycle_weight,
-                    node.sol + [0],
-                    cycle_weights,
-                )
-                heapq.heappush(queue, cycle_node)
+            elif graph.has_edge(node.sol[-1], 0):
+                cycle_bound, cycle_min_weights = update_bound(graph, 0, node)
+                if cycle_bound < best:
+                    cycle_weight: float = graph[node.sol[-1]][0]["weight"]
+                    cycle_node: Node = Node(
+                        cycle_bound,
+                        node.level + 1,
+                        node.cost + cycle_weight,
+                        node.sol + [0],
+                        cycle_min_weights,
+                    )
+                    heapq.heappush(queue, cycle_node)
     return best
+
+
+def _branch_and_bound_helper(graph: nx.Graph, k: int, node: Node, best: float) -> Node:
+    if k not in node.sol and graph.has_edge(node.sol[-1], k):
+        new_bound, new_min_weights = update_bound(graph, k, node)
+        if new_bound < best:
+            new_weight: float = graph[node.sol[-1]][k]["weight"]
+            new_node: Node = Node(
+                new_bound,
+                node.level + 1,
+                node.cost + new_weight,
+                node.sol + [k],
+                new_min_weights,
+            )
+            return new_node
+    return None
