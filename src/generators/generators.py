@@ -30,9 +30,7 @@ def generate_points(number_of_points: int, floor: int, ceil: int) -> set:
 
 def generate_instances(floor: int, ceil: int) -> pd.DataFrame:
     """Gere instâncias, rode os algoritmos e colete as métricas."""
-    df: pd.DataFrame = pd.DataFrame(
-        columns=["Instância", "Algoritmo", "Distância", "Tempo", "Custo"]
-    )
+    data: list[list] = []
     for i in range(floor, ceil):
         points: set = generate_points(2**i, 0, 4000)
         for metric in ("Euclidiana", "Manhattan"):
@@ -45,18 +43,23 @@ def generate_instances(floor: int, ceil: int) -> pd.DataFrame:
                 "Christofides",
                 # "Branch And Bound",
             ]
-            for k in algorithms:
-                _measure_algorithm(k, graph, df, metric, i)
-    return df
+            for algorithm in algorithms:
+                row: list[int, str, str, float, float] = _measure_algorithm(
+                    algorithm, graph, metric, i
+                )
+                data.append(row)
+    return pd.DataFrame(
+        data, columns=["Instância", "Algoritmo", "Distância", "Tempo", "Custo"]
+    )
 
 
 def _measure_algorithm(
-    k: int, graph: nx.Graph, df: pd.DataFrame, metric: str, i: int
-) -> None:
+    algorithm: str, graph: nx.Graph, metric: str, i: int
+) -> list[int, str, str, float, float]:
     """Realiza a medição de um algoritmo em uma instância."""
     start: float = time.time()
-    cost: float = tsp_solver(k, graph)
-    algorithm: str = k
+    cost: float = tsp_solver(algorithm, graph)
+    algorithm: str = algorithm
     end: float = time.time()
     diff_time: float = end - start
-    df.loc[len(df)] = [i, algorithm, metric, diff_time, cost]
+    return [i, algorithm, metric, diff_time, cost]
