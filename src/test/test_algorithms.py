@@ -30,27 +30,31 @@ def test_twice_around_the_tree() -> None:
     assert cost == 39
 
 
-def test_christofides() -> None:
-    """
-    Compare o resultado com a implementação do networkx.
-
-    Exemplo: https://en.wikipedia.org/wiki/File:Weighted_K4.svg
-    """
+@pytest.fixture
+def _input_graph() -> nx.Graph:
     matrix: np.array = np.array(
         [
             [0, 0, 0, 0],
             [20, 0, 0, 0],
             [42, 30, 0, 0],
-            [35, 35, 12, 0],
+            [35, 34, 12, 0],
         ]
     )
     graph: nx.Graph = nx.from_numpy_array(matrix)
+    return graph
 
-    expected_cycle: list[int] = nx_app.christofides(graph)
 
-    expected_cost: float = calculate_cost(expected_cycle, graph)
+def test_christofides(_input_graph: nx.Graph) -> None:
+    """
+    Compare o resultado com a implementação do networkx.
 
-    actual_cost: float = tsp_solver("Christofides", graph)
+    Exemplo: https://en.wikipedia.org/wiki/File:Weighted_K4.svg
+    """
+    expected_cycle: list[int] = nx_app.christofides(_input_graph)
+
+    expected_cost: float = calculate_cost(expected_cycle, _input_graph)
+
+    actual_cost: float = tsp_solver("Christofides", _input_graph)
 
     assert expected_cost == actual_cost
 
@@ -74,8 +78,8 @@ def test_tsp_solver_exception() -> None:
         tsp_solver("Lula 13", graph)
 
 
-def test_initial_bound() -> None:
-    """Teste o bound usando o exemplo das aulas."""
+@pytest.fixture
+def _input_graph_bound() -> nx.Graph:
     matrix: np.array = np.array(
         [
             [0, 0, 0, 0, 0],
@@ -86,9 +90,12 @@ def test_initial_bound() -> None:
         ]
     )
     graph: nx.Graph = nx.from_numpy_array(matrix)
+    return graph
 
-    # Padrão
-    boundary, weights = initial_bound(graph)
+
+def test_initial_bound(_input_graph_bound: nx.Graph) -> None:
+    """Teste o bound usando o exemplo das aulas."""
+    boundary, weights = initial_bound(_input_graph_bound)
     assert boundary == 14
 
     assert weights == [
@@ -100,19 +107,9 @@ def test_initial_bound() -> None:
     ]
 
 
-def test_update_bound() -> None:
+def test_update_bound(_input_graph_bound: nx.Graph) -> None:
     """Teste o bound usando o exemplo das aulas."""
-    matrix: np.array = np.array(
-        [
-            [0, 0, 0, 0, 0],
-            [3, 0, 0, 0, 0],
-            [1, 6, 0, 0, 0],
-            [5, 7, 4, 0, 0],
-            [8, 9, 2, 3, 0],
-        ]
-    )
-    graph: nx.Graph = nx.from_numpy_array(matrix)
-    init_cost, init_weights = initial_bound(graph)
+    init_cost, init_weights = initial_bound(_input_graph_bound)
     init_node: Node = Node(init_cost, 0, 0, [0], init_weights)
 
     # Legenda
@@ -124,49 +121,40 @@ def test_update_bound() -> None:
     # (é meio complicado se certificar que os parâmetros estão corretos)
 
     # Gigante
-    boundary, weights = update_bound(graph, 3, init_node)
+    boundary, weights = update_bound(_input_graph_bound, 3, init_node)
     assert boundary == 16
     # Gigante, Gigante
     node: Node = Node(16, 0, 0, [3, 0], weights)
-    boundary, _ = update_bound(graph, 4, node)
+    boundary, _ = update_bound(_input_graph_bound, 4, node)
     assert boundary == 22
 
     # Menor
-    boundary, weights = update_bound(graph, 2, init_node)
+    boundary, weights = update_bound(_input_graph_bound, 2, init_node)
     assert boundary == init_cost
     # Menor, Gigante
     node: Node = Node(init_cost, 0, 0, [2, 0], weights)
-    boundary, _ = update_bound(graph, 3, node)
+    boundary, _ = update_bound(_input_graph_bound, 3, node)
     assert boundary == 16
 
     # Maior
-    boundary, weights = update_bound(graph, 1, init_node)
+    boundary, weights = update_bound(_input_graph_bound, 1, init_node)
     assert boundary == init_cost
     # Maior, Gigante
     node: Node = Node(init_cost, 0, 0, [1, 0], weights)
-    boundary, _ = update_bound(graph, 3, node)
+    boundary, _ = update_bound(_input_graph_bound, 3, node)
     assert boundary == 17
 
     # Menor, Maior
     new_node: Node = Node(init_cost, 0, 0, [2], init_weights)
-    _, weights = update_bound(graph, 0, new_node)
+    _, weights = update_bound(_input_graph_bound, 0, new_node)
     node: Node = Node(init_cost, 0, 0, [2, 0], weights)
-    boundary, _ = update_bound(graph, 1, node)
+    boundary, _ = update_bound(_input_graph_bound, 1, node)
     assert boundary == init_cost
 
 
-def test_branch_and_bound() -> None:
+def test_branch_and_bound(_input_graph: nx.Graph) -> None:
     """Teste o branch and bound usando o exemplo das aulas."""
-    matrix: np.array = np.array(
-        [
-            [0, 0, 0, 0],
-            [20, 0, 0, 0],
-            [42, 30, 0, 0],
-            [35, 34, 12, 0],
-        ]
-    )
-    graph: nx.Graph = nx.from_numpy_array(matrix)
-    actual_cost: float = tsp_solver("Branch And Bound", graph)
+    actual_cost: float = tsp_solver("Branch And Bound", _input_graph)
     assert actual_cost == 97
 
 
