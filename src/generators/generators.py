@@ -46,11 +46,13 @@ def generate_instances(floor: int, ceil: int) -> pd.DataFrame:
                 "Branch And Bound",
             ]
             for k in algorithms:
-                measure_algorithm(k, graph, df, j, i)
+                _measure_algorithm(k, graph, df, j, i)
     return df
 
 
-def measure_algorithm(k: int, graph: nx.Graph, df: pd.DataFrame, j: int, i: int) -> None:
+def _measure_algorithm(
+    k: int, graph: nx.Graph, df: pd.DataFrame, j: bool, i: int
+) -> None:
     """Realiza a medição de um algoritmo em uma instância."""
     dist_type: str = "Euclidiana" if j else "Manhattan"
     start: float = time.time()
