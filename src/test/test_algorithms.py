@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_almost_equal
 
-from src.algorithms import tsp_matcher, tsp_solver
+from src.algorithms import tsp_solver
 from src.algorithms.bounds import initial_bound, update_bound
 from src.algorithms.node import Node
 from src.calculate import calculate_cost, calculate_distance
@@ -25,7 +25,7 @@ def test_twice_around_the_tree() -> None:
     )
 
     graph: nx.Graph = nx.from_numpy_array(matrix)
-    cost: float = tsp_solver(1, graph)
+    cost: float = tsp_solver("Twice Around The Tree", graph)
 
     assert cost == 39
 
@@ -50,7 +50,7 @@ def test_christofides() -> None:
 
     expected_cost: float = calculate_cost(expected_cycle, graph)
 
-    actual_cost: float = tsp_solver(2, graph)
+    actual_cost: float = tsp_solver("Christofides", graph)
 
     assert expected_cost == actual_cost
 
@@ -62,18 +62,16 @@ def test_christofides_complex() -> None:
     graph: nx.Graph = nx.from_numpy_array(matrix)
     expected_cycle: list[int] = nx_app.christofides(graph)
     expected_cost: float = calculate_cost(expected_cycle, graph)
-    actual_cost: float = tsp_solver(2, graph)
+    actual_cost: float = tsp_solver("Christofides", graph)
 
     assert_almost_equal(actual_cost, expected_cost)
 
 
 def test_tsp_solver_exception() -> None:
-    """Capture exceções de tsp_solver e tsp_matcher."""
+    """Capture exceções de tsp_solver."""
     graph: nx.Graph = nx.Graph()
     with pytest.raises(Exception, match="Esse algoritmo não existe"):
-        tsp_solver(4, graph)
-    with pytest.raises(Exception, match="Esse algoritmo não existe"):
-        tsp_matcher(4)
+        tsp_solver("Lula 13", graph)
 
 
 def test_initial_bound() -> None:
@@ -168,7 +166,7 @@ def test_branch_and_bound() -> None:
         ]
     )
     graph: nx.Graph = nx.from_numpy_array(matrix)
-    actual_cost: float = tsp_solver(3, graph)
+    actual_cost: float = tsp_solver("Branch And Bound", graph)
     assert actual_cost == 97
 
 
@@ -180,6 +178,6 @@ def test_branch_and_bound_complex() -> None:
     tsp = nx.approximation.traveling_salesman_problem
     expected_cycle: list[int] = tsp(graph)
     expected_cost: float = calculate_cost(expected_cycle, graph)
-    actual_cost: float = tsp_solver(3, graph)
+    actual_cost: float = tsp_solver("Branch And Bound", graph)
 
     assert_almost_equal(actual_cost, expected_cost)
