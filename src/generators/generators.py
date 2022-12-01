@@ -35,29 +35,28 @@ def generate_instances(floor: int, ceil: int) -> pd.DataFrame:
     )
     for i in range(floor, ceil):
         points: set = generate_points(2**i, 0, 4000)
-        for j in (True, False):
-            matrix: np.array = calculate_distance(points, j)
+        for metric in ("Euclidiana", "Manhattan"):
+            matrix: np.array = calculate_distance(points, metric)
             graph: nx.Graph = nx.from_numpy_array(matrix)
 
             # TODO: retornar espaço
             algorithms: list[str] = [
                 "Twice Around The Tree",
                 "Christofides",
-                "Branch And Bound",
+                # "Branch And Bound",
             ]
             for k in algorithms:
-                _measure_algorithm(k, graph, df, j, i)
+                _measure_algorithm(k, graph, df, metric, i)
     return df
 
 
 def _measure_algorithm(
-    k: int, graph: nx.Graph, df: pd.DataFrame, j: bool, i: int
+    k: int, graph: nx.Graph, df: pd.DataFrame, metric: str, i: int
 ) -> None:
     """Realiza a medição de um algoritmo em uma instância."""
-    dist_type: str = "Euclidiana" if j else "Manhattan"
     start: float = time.time()
     cost: float = tsp_solver(k, graph)
     algorithm: str = k
     end: float = time.time()
     diff_time: float = end - start
-    df.loc[len(df)] = [i, algorithm, dist_type, diff_time, cost]
+    df.loc[len(df)] = [i, algorithm, metric, diff_time, cost]

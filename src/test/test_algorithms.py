@@ -58,7 +58,7 @@ def test_christofides() -> None:
 def test_christofides_complex() -> None:
     """Gere uma matriz usando as funções do programa e compare ambas implementações."""
     points = generate_points(2**7, 1, 1000)
-    matrix = calculate_distance(points, True)
+    matrix = calculate_distance(points, "Euclidiana")
     graph: nx.Graph = nx.from_numpy_array(matrix)
     expected_cycle: list[int] = nx_app.christofides(graph)
     expected_cost: float = calculate_cost(expected_cycle, graph)
@@ -116,9 +116,9 @@ def test_update_bound() -> None:
     init_node: Node = Node(init_cost, 0, 0, [0], init_weights)
 
     # Legenda
-    # Menor: menor dos dois menores valores de um nó
-    # Maior: MAIOR dos dois maiores valores de um nó
-    # Gigante: outros
+    # Menor: menor dos dois menores pesos de arestas de um nó
+    # Maior: MAIOR dos dois maiores pesos de arestas de um nó
+    # Gigante: outros pesos de arestas
 
     # Tente reaproveitar instâncias
     # (é meio complicado se certificar que os parâmetros estão corretos)
@@ -173,7 +173,7 @@ def test_branch_and_bound() -> None:
 def test_branch_and_bound_complex() -> None:
     """Compara minha implementação com a do networkx, que é aproximativa."""
     points = generate_points(8, 1, 100)
-    matrix = calculate_distance(points, True)
+    matrix = calculate_distance(points, "Euclidiana")
     graph: nx.Graph = nx.from_numpy_array(matrix)
     tsp = nx.approximation.traveling_salesman_problem
     expected_cycle: list[int] = tsp(graph)

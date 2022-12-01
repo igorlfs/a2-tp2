@@ -5,7 +5,7 @@ import numpy as np
 import scipy.spatial.distance as dist
 
 
-def calculate_distance(points: set, euclidean: bool) -> np.array:
+def calculate_distance(points: set[tuple[int, int]], metric: str) -> np.array:
     """
     Calcula as distâncias entre os `points` e as armazena numa matriz de adjacência.
 
@@ -15,7 +15,16 @@ def calculate_distance(points: set, euclidean: bool) -> np.array:
     adjacency_matrix: np.array = np.zeros((size, size))
     for i, p in enumerate(points):
         for j, q in enumerate(points):
-            distance: float = dist.euclidean(p, q) if euclidean else dist.cityblock(p, q)
+            if j >= i:
+                continue
+            distance: float = 0
+            match metric:  # noqa: E999
+                case "Euclidiana":
+                    distance += dist.euclidean(p, q)
+                case "Manhattan":
+                    distance += dist.cityblock(p, q)
+                case _:
+                    raise Exception(f"Métrica de distância {metric} desconhecida")
             adjacency_matrix[i][j] = distance
     return adjacency_matrix
 
