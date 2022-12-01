@@ -9,21 +9,18 @@ import pandas as pd
 from src.algorithms import tsp_solver
 from src.calculate import calculate_distance
 
-COORDINATES_FLOOR = 0
-COORDINATES_CEIL = 10000
-SIZE = COORDINATES_CEIL - COORDINATES_FLOOR + 1
 
-
-def generate_points(number_of_points: int) -> set:
+def generate_points(number_of_points: int, floor: int, ceil: int) -> set:
     """Gera um conjunto de tamanho `number_of_points` de pontos aleatórios."""
-    if number_of_points > SIZE * SIZE:
+    size = ceil - floor + 1
+    if number_of_points > size * size:
         raise Exception("Muitos pontos para pouco espaço!")
 
     points: set = set()
 
     while len(points) < number_of_points:
-        x_coord: int = randint(COORDINATES_FLOOR, COORDINATES_CEIL)
-        y_coord: int = randint(COORDINATES_FLOOR, COORDINATES_CEIL)
+        x_coord: int = randint(floor, ceil)
+        y_coord: int = randint(floor, ceil)
         point: tuple[int, int] = (x_coord, y_coord)
         if point not in points:
             points.add(point)
@@ -37,7 +34,7 @@ def generate_instances(floor: int, ceil: int) -> pd.DataFrame:
         columns=["Instância", "Algoritmo", "Distância", "Tempo", "Custo"]
     )
     for i in range(floor, ceil):
-        points: set = generate_points(2**i)
+        points: set = generate_points(2**i, 0, 4000)
         for j in (True, False):
             matrix: np.array = calculate_distance(points, j)
             graph: nx.Graph = nx.from_numpy_array(matrix)

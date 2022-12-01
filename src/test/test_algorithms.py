@@ -57,7 +57,7 @@ def test_christofides() -> None:
 
 def test_christofides_complex() -> None:
     """Gere uma matriz usando as funções do programa e compare ambas implementações."""
-    points = generate_points(2**8)
+    points = generate_points(2**7, 1, 1000)
     matrix = calculate_distance(points, True)
     graph: nx.Graph = nx.from_numpy_array(matrix)
     expected_cycle: list[int] = nx_app.christofides(graph)
@@ -172,7 +172,7 @@ def test_branch_and_bound() -> None:
 
 def test_branch_and_bound_complex() -> None:
     """Compara minha implementação com a do networkx, que é aproximativa."""
-    points = generate_points(8)
+    points = generate_points(8, 1, 100)
     matrix = calculate_distance(points, True)
     graph: nx.Graph = nx.from_numpy_array(matrix)
     tsp = nx.approximation.traveling_salesman_problem
