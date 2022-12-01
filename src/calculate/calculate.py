@@ -9,7 +9,7 @@ def calculate_distance(points: set[tuple[int, int]], metric: str) -> np.array:
     """
     Calcula as distâncias entre os `points` e as armazena numa matriz de adjacência.
 
-    Use `euclidean` para decidir se a distância é euclidiana ou de Manhattan.
+    Use `metric` para decidir o tipo da distância (Euclidiana ou Manhattan).
     """
     size: int = len(points)
     adjacency_matrix: np.array = np.zeros((size, size))
