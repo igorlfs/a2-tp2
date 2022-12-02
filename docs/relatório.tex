@@ -1,0 +1,104 @@
+\documentclass{article}
+
+\usepackage{hyperref}               % Use hyperlinks
+
+\usepackage[T1]{fontenc}            % Codificação para português 
+\usepackage[portuguese]{babel}      % Português
+
+
+\usepackage{algorithm}              % Pseudocódigo
+\usepackage[noend]{algpseudocode}
+
+\usepackage{graphicx}               % Coloque figuras
+\usepackage{float}                  % Figuras no lugar "esperado"
+\graphicspath{{./images/}}          % Localização das imagens
+
+\usepackage{amsmath}                % Use equações alinhadas
+
+\usepackage{enumitem}               % Corrige indentação dentro de enumerates/itemizes
+\setlist{  listparindent=\parindent, parsep=0pt, }
+
+\usepackage{hyphenat}               % Use hifens corretamente
+\hyphenation{mate-mática recu-perar}
+
+\usepackage[backend=biber, style=authoryear-icomp]{biblatex}
+\addbibresource{references.bib}
+\usepackage{csquotes}               % https://tex.stackexchange.com/a/229653
+
+\author{Igor Lacerda Faria da Silva}
+\title{Trabalho Prático II \\
+Algoritmos II}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+
+O Trabalho Prático 2 da disciplina de Algoritmos II possui como proposta a análise de diferentes algoritmos para resolver o Problema do Caixeiro Viajante (PCV), com algumas restrições. Em suma, foi implementado um gerador de instâncias do problema, que são submetidas aos três algoritmos desenvolvidos (\textit{Twice Around The Tree}, Christofides e \textit{Branch And Bound}) e suas métricas de execução coletadas e analisadas.
+
+As instâncias do PCV seguem a restrição de possuir como função de custo uma métrica:
+\begin{itemize}
+
+	\item \( c(u,v) \geq 0 \)
+
+	\item \( c(u,v) = 0  \Leftrightarrow  u = v \)
+
+	\item \( c(u,v) = c(v,u) \) (Simetria)
+
+	\item \( c(u,v) \leq c(u,w) + c(w,v) \) (Desigualdade Triangular)
+
+\end{itemize}
+
+As métricas usadas são a distância euclidiana, definida para \( P = (p_x,p_y) \land Q=(q_x,q_y) \) como:
+
+\[ d_{\textrm{euclidiana}} = \sqrt{ (p_x-q_x)^{2} + (p_y-q_y)^2 } \]
+
+E a distância de Manhattan, definida como:
+
+\[ d_{\textrm{Manhattan}} = | p_x - q_x | + | p_y - q_y | \]
+
+
+\section{Implementação}
+
+O trabalho foi implementado na linguagem Python, versão 3.10.8, no sistema operacional Linux. O programa segue o paradigma de programação procedural, visto que não há uma distinção muito clara de quais seriam as classes em uma abordagem de programação orientada a objetos. Dito isso, foi implementada uma única classe. O programa foi testado usando a biblioteca \texttt{pytest}.
+
+\subsection{Arquivos}
+O programa está dividido em 3 módulos: \texttt{calculate}, \texttt{generators}, \texttt{algorithms}, sendo os dois primeiros de auxílio ao terceiro, que implementa de fato os algoritmos. Além disso, existe um módulo de testes que engloba os testes dos outros módulos.
+
+\subsubsection{Calculate}
+
+O módulo \texttt{calculate} é o mais simples, tendo como propósito apenas o cálculo de algumas medições úteis. Possui duas funções: uma para calcular a distância de um conjunto de pontos usando uma determinada métrica (que pode ser ou a distância euclidiana ou a distância de Manhattan). A outra função recebe um ciclo e um grafo e retorna o custo de se percorrer esse caminho.
+
+A função implementada pela biblioteca \texttt{networkx} para o algoritmo de Christofides retorna uma lista de vértices, que inclui o vértice de partida duas vezes (uma vez para fechar o ciclo). Para manter a compatibilidade com essa decisão da biblioteca, a função \texttt{calculate\_cost()} assume que o caminho possui o vértice inicial igual ao vértice final.
+
+\subsubsection{Generators}
+
+O módulo \texttt{generators} possui duas funções principais e uma função auxiliar. Seu propósito é, naturalmente, gerar instâncias do PCV. A função \texttt{generate\_points()} gera um conjunto de \( n \) pontos no plano cartesiano, entre um piso e teto passados como parâmetros. As coordenadas dos pontos são números inteiros, pela especificação. A função \texttt{generate\_instances()} cria um grafo do PCV usando as funções \texttt{generate\_points()} e \texttt{calculate\_distance()}.
+
+% TODO: measure_algorithm() ?
+
+\subsubsection{Algorithms}
+
+O módulo principal do programa é baseado nos três algoritmos para solução do PCV: algoritmo de Christofides, \textit{Branch And Bound}, \textit{Twice Around The Tree}. Também existe uma camada de abstração que facilita a execução em escala.
+
+\begin{itemize}
+
+	\item \textit{Twice Around The Tree}
+
+	      O algoritmo de implementação mais fácil foi o \textit{Twice Around The Tree}, em particular pois foi permitido o uso da biblioteca \texttt{networkx} para fazer o cálculo da árvore geradora e o caminhamento pré-ordem dos vértices. Esse algoritmo é aproximativo e explora as árvores geradoras mínimas (AGM) como ponto de partida: é computacionalmente simples calcular a AGM e é esperado que o circuito hamiltoniano mínimo compartilhe \textit{pelo menos} algumas arestas. Com a AGM em mãos, o grafo é percorrido usando uma DFS para construir o caminho de menor custo a partir desta, excluindo repetições.
+
+	\item Christofides
+
+	\item \textit{Branch And Bound}
+
+\end{itemize}
+
+\section{Análise Experimental}
+
+\section{Conclusão}
+
+% \printbibliography
+
+\end{document}
