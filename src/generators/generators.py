@@ -28,31 +28,16 @@ def generate_points(number_of_points: int, floor: int, ceil: int) -> set:
     return points
 
 
-def generate_instances(floor: int, ceil: int) -> pd.DataFrame:
-    """Gere instâncias, rode os algoritmos e colete as métricas."""
-    data: list[list] = []
-    for i in range(floor, ceil):
-        points: set[tuple[int, int]] = generate_points(2**i, 0, 4000)
-        for metric in ("Euclidiana", "Manhattan"):
-            matrix: np.array = calculate_distance(points, metric)
-            graph: nx.Graph = nx.from_numpy_array(matrix)
-
-            # TODO: retornar espaço
-            algorithms: list[str] = [
-                "Twice Around The Tree",
-                "Christofides",
-                # "Branch And Bound",
-            ]
-            for algorithm in algorithms:
-                row: list = _measure_algorithm(algorithm, graph, metric, i)
-                data.append(row)
-    return pd.DataFrame(
-        data, columns=["Instância", "Algoritmo", "Distância", "Tempo", "Custo"]
-    )
+def generate_instances(size: int, metric: str) -> pd.DataFrame:
+    """Gere instâncias do problema do caixeiro viajante."""
+    points: set[tuple[int, int]] = generate_points(2**size, 0, 4000)
+    matrix: np.array = calculate_distance(points, metric)
+    graph: nx.Graph = nx.from_numpy_array(matrix)
+    return graph
 
 
-def _measure_algorithm(algorithm: str, graph: nx.Graph, metric: str, i: int) -> list:
-    """Realiza a medição de um algoritmo em uma instância."""
+def measure_algorithm(algorithm: str, graph: nx.Graph, metric: str, i: int) -> list:
+    """Executa um algoritmo em uma instância e retorna suas métricas."""
     start: float = time.time()
     cost: float = tsp_solver(algorithm, graph)
     algorithm: str = algorithm
