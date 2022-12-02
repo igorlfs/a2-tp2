@@ -62,7 +62,9 @@ def branch_and_bound(graph: nx.Graph) -> float:
     return best
 
 
-def _branch_and_bound_helper(graph: nx.Graph, k: int, node: Node, best: float) -> Node:
+def _branch_and_bound_helper(
+    graph: nx.Graph, k: int, node: Node, best: float
+) -> Node | None:
     if (k not in node.sol or k == 0) and graph.has_edge(node.sol[-1], k):
         new_bound, new_min_weights = update_bound(graph, k, node)
         if new_bound < best:

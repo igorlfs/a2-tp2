@@ -14,7 +14,7 @@ from src.generators import generate_instances
 
 def test_twice_around_the_tree() -> None:
     """Teste o twice around the tree usando o exemplo das aulas."""
-    matrix: np.array = np.array(
+    matrix: np.ndarray = np.array(
         [
             [0, 0, 0, 0, 0],
             [4, 0, 0, 0, 0],
@@ -31,7 +31,7 @@ def test_twice_around_the_tree() -> None:
 
 @pytest.fixture
 def _input_graph() -> nx.Graph:
-    matrix: np.array = np.array(
+    matrix: np.ndarray = np.array(
         [
             [0, 0, 0, 0],
             [20, 0, 0, 0],
@@ -75,7 +75,7 @@ def test_tsp_solver_exception() -> None:
 
 @pytest.fixture
 def _input_graph_bound() -> nx.Graph:
-    matrix: np.array = np.array(
+    matrix: np.ndarray = np.array(
         [
             [0, 0, 0, 0, 0],
             [3, 0, 0, 0, 0],
@@ -127,7 +127,7 @@ def test_update_bound(_input_graph_bound: nx.Graph) -> None:
     boundary, weights = update_bound(_input_graph_bound, 2, init_node)
     assert boundary == init_cost
     # Menor, Gigante
-    node: Node = Node(init_cost, 0, 0, [2, 0], weights)
+    node = Node(init_cost, 0, 0, [2, 0], weights)
     boundary, _ = update_bound(_input_graph_bound, 3, node)
     assert boundary == 16
 
@@ -135,14 +135,14 @@ def test_update_bound(_input_graph_bound: nx.Graph) -> None:
     boundary, weights = update_bound(_input_graph_bound, 1, init_node)
     assert boundary == init_cost
     # Maior, Gigante
-    node: Node = Node(init_cost, 0, 0, [1, 0], weights)
+    node = Node(init_cost, 0, 0, [1, 0], weights)
     boundary, _ = update_bound(_input_graph_bound, 3, node)
     assert boundary == 17
 
     # Menor, Maior
     new_node: Node = Node(init_cost, 0, 0, [2], init_weights)
     _, weights = update_bound(_input_graph_bound, 0, new_node)
-    node: Node = Node(init_cost, 0, 0, [2, 0], weights)
+    node = Node(init_cost, 0, 0, [2, 0], weights)
     boundary, _ = update_bound(_input_graph_bound, 1, node)
     assert boundary == init_cost
 

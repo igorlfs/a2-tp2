@@ -31,7 +31,7 @@ def generate_points(number_of_points: int, floor: int, ceil: int) -> set:
 def generate_instances(size: int, metric: str) -> pd.DataFrame:
     """Gere instâncias do problema do caixeiro viajante."""
     points: set[tuple[int, int]] = generate_points(2**size, 0, 4000)
-    matrix: np.array = calculate_distance(points, metric)
+    matrix: np.ndarray = calculate_distance(points, metric)
     graph: nx.Graph = nx.from_numpy_array(matrix)
     return graph
 
@@ -40,7 +40,6 @@ def measure_algorithm(algorithm: str, graph: nx.Graph, metric: str, i: int) -> l
     """Executa um algoritmo em uma instância e retorna suas métricas."""
     start: float = time.time()
     cost: float = tsp_solver(algorithm, graph)
-    algorithm: str = algorithm
     end: float = time.time()
     diff_time: float = end - start
     return [i, algorithm, metric, diff_time, cost]

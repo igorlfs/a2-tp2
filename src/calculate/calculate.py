@@ -5,14 +5,14 @@ import numpy as np
 import scipy.spatial.distance as dist
 
 
-def calculate_distance(points: set[tuple[int, int]], metric: str) -> np.array:
+def calculate_distance(points: set[tuple[int, int]], metric: str) -> np.ndarray:
     """
     Calcula as distâncias entre os `points` e as armazena numa matriz de adjacência.
 
     Use `metric` para decidir o tipo da distância (Euclidiana ou Manhattan).
     """
     size: int = len(points)
-    adjacency_matrix: np.array = np.zeros((size, size))
+    adjacency_matrix: np.ndarray = np.zeros((size, size))
     for i, p in enumerate(points):
         for j, q in enumerate(points):
             if j >= i:

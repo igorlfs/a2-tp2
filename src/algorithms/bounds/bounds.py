@@ -16,7 +16,7 @@ def initial_bound(graph: nx.Graph) -> tuple[float, list[tuple[float, float, bool
     boundary: float = 0
     min_weights: list[tuple[float, float, bool]] = []
     for i in range(size):
-        smallest: tuple[float, float] = (inf, inf, False)
+        smallest: tuple[float, float, bool] = (inf, inf, False)
         for j in range(size):
             if i == j:
                 continue

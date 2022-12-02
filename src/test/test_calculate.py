@@ -27,7 +27,7 @@ def test_calculate_distance_exception() -> None:
 
 def test_calculate_cost() -> None:
     """Teste cálculo de custo de um ciclo."""
-    matrix: np.array = np.array(
+    matrix: np.ndarray = np.array(
         [
             [0, 0, 0, 0],
             [20, 0, 0, 0],
