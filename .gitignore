@@ -6,3 +6,5 @@ src/*/*/.jukit
 docs/*
 !docs/relatório.tex
 !docs/relatório.pdf
+.ruff_cache
+.pytest_cache
