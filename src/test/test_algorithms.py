@@ -8,8 +8,8 @@ from numpy.testing import assert_almost_equal
 from src.algorithms import tsp_solver
 from src.algorithms.bounds import initial_bound, update_bound
 from src.algorithms.node import Node
-from src.calculate import calculate_cost, calculate_distance
-from src.generators import generate_points
+from src.calculate import calculate_cost
+from src.generators import generate_instances
 
 
 def test_twice_around_the_tree() -> None:
@@ -23,7 +23,6 @@ def test_twice_around_the_tree() -> None:
             [12, 9, 11, 7, 0],
         ]
     )
-
     graph: nx.Graph = nx.from_numpy_array(matrix)
     cost: float = tsp_solver("Twice Around The Tree", graph)
 
@@ -51,9 +50,7 @@ def test_christofides(_input_graph: nx.Graph) -> None:
     Exemplo: https://en.wikipedia.org/wiki/File:Weighted_K4.svg
     """
     expected_cycle: list[int] = nx_app.christofides(_input_graph)
-
     expected_cost: float = calculate_cost(expected_cycle, _input_graph)
-
     actual_cost: float = tsp_solver("Christofides", _input_graph)
 
     assert expected_cost == actual_cost
@@ -61,9 +58,7 @@ def test_christofides(_input_graph: nx.Graph) -> None:
 
 def test_christofides_complex() -> None:
     """Gere uma matriz usando as funções do programa e compare ambas implementações."""
-    points: set[tuple[int, int]] = generate_points(2**7, 1, 1000)
-    matrix: np.array = calculate_distance(points, "Euclidiana")
-    graph: nx.Graph = nx.from_numpy_array(matrix)
+    graph: nx.Graph = generate_instances(7, "Euclidiana")
     expected_cycle: list[int] = nx_app.christofides(graph)
     expected_cost: float = calculate_cost(expected_cycle, graph)
     actual_cost: float = tsp_solver("Christofides", graph)
@@ -96,8 +91,8 @@ def _input_graph_bound() -> nx.Graph:
 def test_initial_bound(_input_graph_bound: nx.Graph) -> None:
     """Teste o bound usando o exemplo das aulas."""
     boundary, weights = initial_bound(_input_graph_bound)
-    assert boundary == 14
 
+    assert boundary == 14
     assert weights == [
         (1, 3, False),
         (3, 6, False),
@@ -160,11 +155,8 @@ def test_branch_and_bound(_input_graph: nx.Graph) -> None:
 
 def test_branch_and_bound_complex() -> None:
     """Compara minha implementação com a do networkx, que é aproximativa."""
-    points = generate_points(8, 1, 100)
-    matrix = calculate_distance(points, "Euclidiana")
-    graph: nx.Graph = nx.from_numpy_array(matrix)
-    tsp = nx.approximation.traveling_salesman_problem
-    expected_cycle: list[int] = tsp(graph)
+    graph: nx.Graph = generate_instances(3, "Euclidiana")
+    expected_cycle: list[int] = nx_app.traveling_salesman_problem(graph)
     expected_cost: float = calculate_cost(expected_cycle, graph)
     actual_cost: float = tsp_solver("Branch And Bound", graph)
 
