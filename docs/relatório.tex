@@ -26,7 +26,8 @@
 \usepackage{csquotes}               % https://tex.stackexchange.com/a/229653
 
 \author{Igor Lacerda Faria da Silva}
-\title{Trabalho Prático II \\
+\title{Trabalho Prático II
+
 Algoritmos II}
 \date{}
 
@@ -69,7 +70,7 @@ O programa está dividido em 3 módulos: \texttt{calculate}, \texttt{generators}
 
 \subsubsection{Calculate}
 
-O módulo \texttt{calculate} é o mais simples, tendo como propósito apenas o cálculo de algumas medições úteis. Possui duas funções: uma para calcular a distância de um conjunto de pontos usando uma determinada métrica (que pode ser ou a distância euclidiana ou a distância de Manhattan). A outra função recebe um ciclo e um grafo e retorna o custo de se percorrer esse caminho.
+O módulo \texttt{calculate} é o mais simples, tendo como propósito apenas o cálculo de algumas medições úteis. Possui duas funções: uma para calcular a distância de um conjunto de pontos usando uma determinada métrica (que pode ser ou a distância euclidiana, ou a distância de Manhattan). A outra função recebe um ciclo e um grafo e retorna o custo de se percorrer esse caminho.
 
 A função implementada pela biblioteca \texttt{networkx} para o algoritmo de Christofides retorna uma lista de vértices, que inclui o vértice de partida duas vezes (uma vez para fechar o ciclo). Para manter a compatibilidade com essa decisão da biblioteca, a função \texttt{calculate\_cost()} assume que o caminho possui o vértice inicial igual ao vértice final.
 
@@ -87,7 +88,7 @@ O módulo principal do programa é baseado nos três algoritmos para solução d
 
 	\item \textit{Twice Around The Tree}
 
-	      O algoritmo de implementação mais fácil foi o \textit{Twice Around The Tree}, em particular pois foi permitido o uso da biblioteca \texttt{networkx} para fazer o cálculo da árvore geradora e o caminhamento pré-ordem dos vértices. Esse algoritmo é aproximativo e explora as árvores geradoras mínimas (AGM) como ponto de partida: é computacionalmente simples calcular a AGM e é esperado que o circuito hamiltoniano mínimo compartilhe \textit{pelo menos} algumas arestas. Com a AGM em mãos, o grafo é percorrido usando uma DFS para construir o caminho de menor custo a partir desta, excluindo repetições.
+	      O algoritmo de implementação mais fácil foi o \textit{Twice Around The Tree}, pois foi permitido o uso da biblioteca \texttt{networkx} para fazer o cálculo da árvore geradora e o caminhamento pré-ordem dos vértices. Esse algoritmo é aproximativo e explora as árvores geradoras mínimas (AGM) como ponto de partida: é computacionalmente simples calcular a AGM e é esperado que o circuito hamiltoniano mínimo compartilhe \textit{pelo menos} algumas arestas. Com a AGM em mãos, o grafo é percorrido usando uma DFS para construir o caminho de menor custo a partir desta, excluindo repetições.
 
 	\item Christofides
 
