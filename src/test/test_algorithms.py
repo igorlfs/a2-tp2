@@ -153,8 +153,14 @@ def test_branch_and_bound(_input_graph: nx.Graph) -> None:
     assert actual_cost == 97
 
 
+@pytest.mark.xfail
 def test_branch_and_bound_complex() -> None:
-    """Compara minha implementação com a do networkx, que é aproximativa."""
+    """
+    Teste o branch and bound com a implementação do networkx.
+
+    Como a implementação do networkx é aproximativa,
+    é esperado que esse teste possa falhar.
+    """
     graph: nx.Graph = generate_instances(3, "Euclidiana")
     expected_cycle: list[int] = nx_app.traveling_salesman_problem(graph)
     expected_cost: float = calculate_cost(expected_cycle, graph)
