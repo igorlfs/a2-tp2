@@ -1,11 +1,9 @@
 """Gere a instância e seu conjunto de pontos."""
-import time
 from random import randint
 
 import networkx as nx
 import numpy as np
 
-from src.algorithms import tsp_solver
 from src.calculate import calculate_distance
 
 
@@ -33,12 +31,3 @@ def generate_instances(size: int, metric: str) -> nx.Graph:
     matrix: np.ndarray = calculate_distance(points, metric)
     graph: nx.Graph = nx.from_numpy_array(matrix)
     return graph
-
-
-def measure_algorithm(algorithm: str, graph: nx.Graph, metric: str, i: int) -> list:
-    """Executa um algoritmo em uma instância e retorna suas métricas."""
-    start: float = time.time()
-    cost: float = tsp_solver(algorithm, graph)
-    end: float = time.time()
-    diff_time: float = end - start
-    return [i, algorithm, metric, diff_time, cost]
