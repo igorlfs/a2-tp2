@@ -4,7 +4,6 @@ from random import randint
 
 import networkx as nx
 import numpy as np
-import pandas as pd
 
 from src.algorithms import tsp_solver
 from src.calculate import calculate_distance
@@ -28,7 +27,7 @@ def generate_points(number_of_points: int, floor: int, ceil: int) -> set:
     return points
 
 
-def generate_instances(size: int, metric: str) -> pd.DataFrame:
+def generate_instances(size: int, metric: str) -> nx.Graph:
     """Gere instâncias do problema do caixeiro viajante."""
     points: set[tuple[int, int]] = generate_points(2**size, 0, 4000)
     matrix: np.ndarray = calculate_distance(points, metric)

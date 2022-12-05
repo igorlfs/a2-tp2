@@ -4,7 +4,7 @@ import networkx as nx
 import pytest
 from pytest_mock import MockerFixture
 
-from src.generators import measure_algorithm, generate_points
+from src.generators import generate_points, measure_algorithm
 
 
 def test_generate_points_exception() -> None:
