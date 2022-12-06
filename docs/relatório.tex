@@ -37,9 +37,9 @@ Algoritmos II}
 
 \section{Introdução}
 
-O Trabalho Prático 2 da disciplina de Algoritmos II possui como proposta a análise de diferentes algoritmos para resolver o Problema do Caixeiro Viajante (PCV), com algumas restrições. Em suma, foi implementado um gerador de instâncias do problema, que são submetidas aos três algoritmos desenvolvidos (\textit{Twice Around The Tree}, Christofides e \textit{Branch And Bound}) e suas métricas de execução coletadas e analisadas.
+O Trabalho Prático 2 da disciplina de Algoritmos II possui como proposta a análise de diferentes algoritmos para resolver o Problema do Caixeiro Viajante (PCV), com algumas restrições. Em suma, foi implementado um gerador de instâncias do problema, que são submetidas aos três algoritmos desenvolvidos (\textit{Twice Around The Tree}, Christofides e \textit{Branch And Bound}) e suas métricas de execução são coletadas e analisadas.
 
-As instâncias do PCV seguem a restrição de possuir como função de custo uma métrica:
+As instâncias do PCV seguem a restrição de possuir como função de custo uma métrica. Ou seja, uma função que atende às seguintes propriedades:
 \begin{itemize}
 
 	\item \( c(u,v) \geq 0 \)
@@ -63,22 +63,26 @@ E a distância de Manhattan, definida como:
 
 \section{Implementação}
 
-O trabalho foi implementado na linguagem Python, versão 3.10.8, no sistema operacional Linux. O programa segue o paradigma de programação procedural, visto que não há uma distinção muito clara de quais seriam as classes em uma abordagem de programação orientada a objetos. Dito isso, foi implementada uma única classe. O programa foi testado usando a biblioteca \texttt{pytest}.
+O trabalho foi implementado na linguagem Python, versão 3.10.8, no sistema operacional Linux. O programa segue o paradigma de programação procedural, visto que não há uma distinção muito clara de quais seriam as classes em uma abordagem de programação orientada a objetos. Dito isso, foi implementada uma única classe (\texttt{Node}). O programa foi testado usando a biblioteca \texttt{pytest}.
 
 \subsection{Arquivos}
-O programa está dividido em 3 módulos: \texttt{calculate}, \texttt{generators}, \texttt{algorithms}, sendo os dois primeiros de auxílio ao terceiro, que implementa de fato os algoritmos. Além disso, existe um módulo de testes que engloba os testes dos outros módulos.
+O programa está dividido em 4 módulos: \texttt{calculate}, \texttt{generators}, \texttt{measure} e \texttt{algorithms}, sendo os 3 primeiros de auxílio ao quarto, que implementa de fato os algoritmos. Além disso, existe um módulo de testes que engloba os testes dos outros módulos.
+
+A divisão dos 3 módulos auxiliares é orientada pelo que cada função faz. Métodos que fazem algum cálculo ficam em \texttt{calculate}, e assim por diante. Mais especificamente, o primeiro verbo no nome de um método determina seu módulo.
 
 \subsubsection{Calculate}
 
-O módulo \texttt{calculate} é o mais simples, tendo como propósito apenas o cálculo de algumas medições úteis. Possui duas funções: uma para calcular a distância de um conjunto de pontos usando uma determinada métrica (que pode ser ou a distância euclidiana, ou a distância de Manhattan). A outra função recebe um ciclo e um grafo e retorna o custo de se percorrer esse caminho.
+O módulo \texttt{calculate} é o mais simples, tendo como propósito apenas o cálculo de algumas medições úteis. Possui duas funções: uma para calcular a distância de um conjunto de pontos usando uma determinada métrica. A outra função recebe um ciclo e um grafo e retorna o custo de se percorrer esse caminho.
 
-A função implementada pela biblioteca \texttt{networkx} para o algoritmo de Christofides retorna uma lista de vértices, que inclui o vértice de partida duas vezes (uma vez para fechar o ciclo). Para manter a compatibilidade com essa decisão da biblioteca, a função \texttt{calculate\_cost()} assume que o caminho possui o vértice inicial igual ao vértice final.
+A função implementada pela biblioteca \texttt{networkx} para o algoritmo de Christofides retorna uma lista de vértices, que inclui o vértice de partida duas vezes (uma vez no final para fechar o ciclo). Para manter a compatibilidade com essa decisão da biblioteca, a função \texttt{calculate\_cost()} assume que o caminho possui o vértice inicial igual ao vértice final.
 
 \subsubsection{Generators}
 
-O módulo \texttt{generators} possui duas funções principais e uma função auxiliar. Seu propósito é, naturalmente, gerar instâncias do PCV. A função \texttt{generate\_points()} gera um conjunto de \( n \) pontos no plano cartesiano, entre um piso e teto passados como parâmetros. As coordenadas dos pontos são números inteiros, pela especificação. A função \texttt{generate\_instances()} cria um grafo do PCV usando as funções \texttt{generate\_points()} e \texttt{calculate\_distance()}.
+O módulo \texttt{generators} possui duas funções. Seu propósito é, naturalmente, gerar instâncias do PCV. A função \texttt{generate\_points()} gera um conjunto de \( n \) pontos no plano cartesiano, entre um piso e teto passados como parâmetros. As coordenadas dos pontos são números inteiros, pela especificação. A função \texttt{generate\_instances()} cria um grafo do PCV usando as funções \texttt{generate\_points()} e \texttt{calculate\_distance()}, do módulo anterior.
 
-% TODO: measure_algorithm() ?
+\subsubsection{Measure}
+
+O módulo \texttt{measure} possui uma única função: \texttt{measure\_algorithm()}, que é chamada pelo programa principal na hora de medir o tempo de execução de um algoritmo, usando a biblioteca \texttt{time}.
 
 \subsubsection{Algorithms}
 
@@ -88,13 +92,39 @@ O módulo principal do programa é baseado nos três algoritmos para solução d
 
 	\item \textit{Twice Around The Tree}
 
-	      O algoritmo de implementação mais fácil foi o \textit{Twice Around The Tree}, pois foi permitido o uso da biblioteca \texttt{networkx} para fazer o cálculo da árvore geradora e o caminhamento pré-ordem dos vértices. Esse algoritmo é aproximativo e explora as árvores geradoras mínimas (AGM) como ponto de partida: é computacionalmente simples calcular a AGM e é esperado que o circuito hamiltoniano mínimo compartilhe \textit{pelo menos} algumas arestas. Com a AGM em mãos, o grafo é percorrido usando uma DFS para construir o caminho de menor custo a partir desta, excluindo repetições.
+	      O algoritmo de implementação mais fácil foi o \textit{Twice Around The Tree} (TATT), pois foi permitido o uso da biblioteca \texttt{networkx} para fazer o cálculo da árvore geradora e o caminhamento pré-ordem dos vértices. Esse algoritmo é (2) aproximativo e explora as árvores geradoras mínimas (AGM) como ideia principal: é computacionalmente simples calcular a AGM e o ciclo encontrado pelo algoritmo, é, no máximo, duas vezes pior que o ciclo ótimo. Com a AGM em mãos, o grafo é percorrido usando uma DFS para construir o caminho, excluindo repetições.
 
 	\item Christofides
 
+	      O algoritmo de Christofides também não possuiu grandes dificuldades de implementação, porque também foi permitido o uso funções da biblioteca \texttt{networkx}. O algoritmo também é aproximativo e começa com o cálculo da AGM. A ideia principal é, como no TATT, caminhar o circuito euleriano, transformando-o em hamiltoniano. Para isso, é feito um \textit{matching} perfeito de peso mínimo no subgrafo induzido pelos vértices de grau ímpar.
+
+	      É então construído um multigrafo, com as arestas do \textit{matching} e da AGM. Neste novo grafo é calculado o circuito euleriano, e seus vértices repetidos são excluídos, chegando-se em uma lista de vértices que é o circuito hamiltoniano encontrado pelo algoritmo. Apesar de mais complicado, o fator de aproximação desse algoritmo é 1.5, o que é um ganho significativo em relação ao TATT.
+
+	      Como esse é um algoritmo famoso, ele está implementado na \texttt{networkx}, e foi criado um teste que compara os custos dos circuitos de ambas as implementações.
+
 	\item \textit{Branch And Bound}
 
+	      Sem dúvida, o algoritmo de implementação mais difícil foi o \textit{branch and bound} (BNB). Seu código foi inspirado no pseudocódigo usado nas aulas, embora a função de \textit{bound} exigiu certa criatividade. Diferentemente dos outros algoritmos, o BNB é exato, e possui complexidade exponencial.
+
+	      A ideia principal de algoritmos de ramificar e limitar é explorar toda a árvore de possibilidades, usando como critério para o próximo item da busca uma estimativa ``realista'' do quanto seria o custo daquele ramo. Uma vez que um caminho foi finalizado, ele passa a ser o melhor atual, e caminhos com estimativas piores do que ele não são explorados. Assim, alguns caminhos não são explorados, o que pode reduzir (na melhor das hipóteses) drasticamente o espaço de busca.
+
+	      Para o usar o BNB no PCV, o principal desafio é fazer uma função de estimativa que seja rápida. Nesta implementação, no inicio do algoritmo é feita uma estimativa inicial, em tempo quadrático, que seria o custo ``ideal'' de um circuito hamiltoniano. Essa estimativa toma como base os dois menores pesos das arestas que saem de cada vértice.
+
+	      Para cada nó da árvore de busca, o custo é atualizado da seguinte maneira: como é inserido um único vértice por nó, é adicionada apenas uma aresta, então é necessário fazer apenas uma modificação, a depender se a aresta inserida é uma das menores para aquele vértice do grafo ou outro. Se a aresta inserida é a primeira para dado nó e não é menor para este, então o custo deve ser atualizado pela diferença de peso entre a maior das menores e a aresta inserida\footnote{É um pouco mais complicado que isso, pois é necessário pegar o teto da divisão por 2 do incremento, mas para evitar confusões adicionais em um parágrafo que já não é simples de entender, essa informação foi omitida.}. É usado um marcador booleano para indicar se já foi inserida uma aresta naquele nodo.
+
+	      Essa é explicação de apenas um dos casos de atualização. As 7 combinações possíveis, que consideram se a primeira aresta inserida é a menor, a segunda menor ou qualquer outra (e similarmente para a segunda aresta), estão agrupados em um teste, baseado em um exemplo das aulas. A lógica dos outros casos é similar (e provavelmente também desnecessariamente complicada).
+
+	      Com a função de \textit{bound} funcionando, a implementação é bastante direta. Na primeira vez que um caminho é completamente percorrido, seu nó passa a ser a solução candidata. As estimativas são comparadas com o custo da candidata e são percorridas mais profundamente se viáveis, atualizando a solução candidata caso necessário. Apesar disso, o algoritmo não deixa de ser exponencial.
+
+	      Justamente por isso, não foi registrada nenhuma execução para esse algoritmo na seção de Análise Experimental, mesmo para \( n = 2^4 \). Nos testes realizados, o tamanho máximo que foi possível executar em menos de meia hora foi \( n = 12 \), com tempos variando de 6 a 28 minutos, tanto para a distância euclidiana como para a de Manhattan. Tendo em vista o custo exponencial, acredita-se que a implementação deixa a desejar em performance, por algumas ordens de magnitude.
+
+	      Esta classe conta com dois submódulos: a classe \texttt{Node}, mencionada anteriormente, cujos únicos propósitos são agrupar cada nó na exploração do BNB e prover um comparador entre eles. Adicionalmente, os métodos para calcular o \textit{bound} são implementados separadamente: \texttt{initial\_bound()} e \texttt{update\_bound()} (e seu método auxiliar). A própria função do \textit{branch and bound} também possui um método auxiliar que condensa a inserção de novos nós na busca.
+
 \end{itemize}
+
+\subsection{Programa Principal}
+
+O programa principal gera instâncias do PCV, de tamanho variando exponencialmente de \( n=2^{4} \) a \( n=2^{10} \), usando ambas as métricas apresentadas, as roda sobre os algoritmos \textit{Twice Around The Tree} e Christofides\footnote{O BNB é excluído devido à sua performance inadequada.} e salva os seguintes resultados em um \textit{DataFrame} da biblioteca \texttt{pandas}: tamanho, algoritmo, distância, tempo e custo. O \textit{DataFrame} é convertido em \texttt{csv} e salvo como ``tsp.csv'', na raiz do projeto.
 
 \section{Análise Experimental}
 
