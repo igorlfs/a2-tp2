@@ -3,10 +3,11 @@
 import networkx as nx
 import pandas as pd
 
-from src.generators import generate_instances, measure_algorithm
+from src.generators import generate_instances
+from src.measure import measure_algorithm
 
 
-def run() -> pd.DataFrame:
+def run() -> None:
     """Gere instâncias, rode os algoritmos e colete as métricas."""
     data: list[list] = []
     for i in range(4, 11):
@@ -20,4 +21,4 @@ def run() -> pd.DataFrame:
         data, columns=["Instância", "Algoritmo", "Distância", "Tempo", "Custo"]
     )
 
-    return df
+    df.to_csv("tsp.csv")
