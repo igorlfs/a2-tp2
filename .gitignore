@@ -3,8 +3,9 @@ src/__pycache__
 src/*/__pycache__
 src/*/*/__pycache__
 src/*/*/.jukit
-docs/*
+docs/relatório.*
 !docs/relatório.tex
 !docs/relatório.pdf
 .ruff_cache
 .pytest_cache
+.jukit

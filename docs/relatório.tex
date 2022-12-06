@@ -128,6 +128,69 @@ O programa principal gera instâncias do PCV, de tamanho variando exponencialmen
 
 \section{Análise Experimental}
 
+Após o processamento dos dados do \textit{DataFrame}, obteve-se as seguintes tabelas:
+
+\begin{center}
+	\textit{Twice Around The Tree} \\ [1ex]
+	\begin{tabular}{c c c c }
+		\hline
+		Tamanho & Tipo       & Tempo (s) & Custo      \\ [0.5ex]
+		4       & Euclidiana & 0.000587  & 17298.593  \\
+		4       & Manhattan  & 0.000451  & 23502      \\
+		5       & Euclidiana & 0.000882  & 26395.748  \\
+		5       & Manhattan  & 0.000880  & 28508      \\
+		6       & Euclidiana & 0.003095  & 34413.646  \\
+		6       & Manhattan  & 0.003430  & 42842      \\
+		7       & Euclidiana & 0.013013  & 48664.624  \\
+		7       & Manhattan  & 0.038881  & 59302      \\
+		8       & Euclidiana & 0.062127  & 65274.484  \\
+		8       & Manhattan  & 0.068079  & 81876      \\
+		9       & Euclidiana & 0.363078  & 92354.840  \\
+		9       & Manhattan  & 0.367995  & 118148     \\
+		10      & Euclidiana & 1.679754  & 127960.470 \\
+		10      & Manhattan  & 1.707548  & 166504     \\ [1ex]
+		\hline
+	\end{tabular}
+\end{center}
+
+\begin{center}
+	Christofides \\ [1ex]
+	\begin{tabular}{c c c c }
+		\hline
+		Tamanho & Tipo       & Tempo (s) & Custo      \\ [0.5ex]
+		4       & Euclidiana & 0.001500  & 15898.835  \\
+		4       & Manhattan  & 0.001099  & 18564      \\
+		5       & Euclidiana & 0.007076  & 23624.548  \\
+		5       & Manhattan  & 0.003580  & 25500      \\
+		6       & Euclidiana & 0.012609  & 28545.995  \\
+		6       & Manhattan  & 0.013538  & 33378      \\
+		7       & Euclidiana & 0.124593  & 41825.469  \\
+		7       & Manhattan  & 0.091646  & 49168      \\
+		8       & Euclidiana & 0.569033  & 53730.344  \\
+		8       & Manhattan  & 0.750834  & 69402      \\
+		9       & Euclidiana & 4.593676  & 76858.895  \\
+		9       & Manhattan  & 5.491562  & 96106      \\
+		10      & Euclidiana & 34.316589 & 105658.274 \\
+		10      & Manhattan  & 33.201210 & 135150     \\ [1ex]
+		\hline
+	\end{tabular}
+\end{center}
+
+\begin{figure} [H]
+	\includegraphics[width=9cm]{met_vs}
+	\centering
+\end{figure}
+
+\begin{figure} [H]
+	\includegraphics[width=9cm]{tempo_vs}
+	\centering
+\end{figure}
+
+\begin{figure} [H]
+	\includegraphics[width=9cm]{custo_vs}
+	\centering
+\end{figure}
+
 \section{Conclusão}
 
 % \printbibliography
