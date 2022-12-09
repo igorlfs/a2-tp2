@@ -9,7 +9,7 @@ from src.algorithms import tsp_solver
 from src.algorithms.bounds import initial_bound, update_bound
 from src.algorithms.node import Node
 from src.calculate import calculate_cost
-from src.generators import generate_instances
+from src.generate import generate_instances
 
 
 def test_twice_around_the_tree() -> None:

@@ -3,7 +3,7 @@
 import networkx as nx
 import pandas as pd
 
-from src.generators import generate_instances
+from src.generate import generate_instances
 from src.measure import measure_algorithm
 
 

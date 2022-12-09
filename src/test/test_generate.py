@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.generators import generate_points
+from src.generate import generate_points
 
 
 def test_generate_points_exception() -> None:
