@@ -14,6 +14,7 @@
 \graphicspath{{./images/}}          % Localização das imagens
 
 \usepackage{amsmath}                % Use equações alinhadas
+\usepackage{caption}                % Não conte as figuras
 
 \usepackage{enumitem}               % Corrige indentação dentro de enumerates/itemizes
 \setlist{  listparindent=\parindent, parsep=0pt, }
@@ -214,6 +215,37 @@ Apesar de compensar muito em tempo, o TATT \textit{pode} deixar a desejar em ter
 	\includegraphics[width=9cm]{custo_vs}
 	\centering
 \end{figure}
+
+\subsection{Memória}
+
+Adicionalmente, também foi realizada uma análise do uso de memória, fazendo uso da biblioteca \texttt{memory\_profile}. Nessa análise, para os algoritmos de Christofides e \textit{Twice Around The Tree}, foi fixada uma instância de tamanho \( n = 2^{10} \), usando distância euclidiana. Para o \textit{branch and bound}, manteve-se a métrica, mas foi usada uma instância de tamanho \( n = 12 \).
+
+\begin{figure} [H]
+	\includegraphics[width=9cm]{mem-tatt}
+	\centering
+	\captionsetup{labelformat=empty}
+	\caption{Uso de memória para o TATT}
+\end{figure}
+
+O primeiro pico, logo no início do programa, se deve à inicialização, \textit{imports} e afins. O segundo pico, logo após os 3 segundos, corresponde à criação do grafo. Desde um pouco antes do \( t = 4s \), até o declínio final, o uso de memória é da função do algoritmo: sua subida ocorre devido à criação da AGM e, o breve período em que mantém constante corresponde ao caminhamento do grafo. O uso máximo de memória foi próximo de 340 MiB, aos 5 segundos.
+
+\begin{figure} [H]
+	\includegraphics[width=9cm]{mem-chris}
+	\centering
+	\captionsetup{labelformat=empty}
+	\caption{Uso de memória para o Christofides}
+\end{figure}
+
+É possível traçar um claro paralelo do uso de memória do Christofides e do TATT: o Christofides é uma versão ``esticada'' do TATT. Ambos possuem o pico de inicialização, da construção do grafo e da criação da AGM, mas como o Christofides é mais sofisticado, com algoritmos mais custosos, ele permanece mais tempo no estado de ``constância'', aos \( \approx \) 330 MiB.
+
+\begin{figure} [H]
+	\includegraphics[width=9cm]{mem-bnb}
+	\centering
+	\captionsetup{labelformat=empty}
+	\caption{Uso de memória para o BNB}
+\end{figure}
+
+O BNB, por outro lado, possui um perfil completamente diferente. Vale lembrar que a instância é 80 vezes menor, mas mesmo assim consumiu 2.35 vezes mais memória em seu pico. A maior parte dessa memória é alocada para criação de novos nós na árvore de busca, e pode variar muito dependendo da execução.
 
 \section{Conclusão}
 
