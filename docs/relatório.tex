@@ -128,7 +128,7 @@ O programa principal gera instâncias do PCV, de tamanho variando exponencialmen
 
 \section{Análise Experimental}
 
-Após o processamento dos dados do \textit{DataFrame}, obteve-se as seguintes tabelas:
+Após o processamento dos dados do \textit{DataFrame}, obteve-se as seguintes tabelas\footnote{Os custos para a distância euclidiana foram arredondados para 3 casas decimais}:
 
 \begin{center}
 	\textit{Twice Around The Tree} \\ [1ex]
@@ -176,15 +176,39 @@ Após o processamento dos dados do \textit{DataFrame}, obteve-se as seguintes ta
 	\end{tabular}
 \end{center}
 
+A instância que gerou esses dados foi salva no repositório como ``data.csv''. É possível agregar esses dados de diversas maneiras: comparando os tempos entre os algoritmos, os custos entre os algoritmos, os tempos entre distâncias e os custos entre distâncias, para listar algumas. Essas 4 análises são discutidas mais a fundo a seguir.
+
+\subsection{Custo por Distância}
+
 \begin{figure} [H]
 	\includegraphics[width=9cm]{met_vs}
 	\centering
 \end{figure}
 
+Para essa comparação, foi fixado o algoritmo como sendo o de Christofides. É possível perceber claramente que o custo da distância euclidiana é sempre menor que o custo da distância de Manhattan. Isso é esperado, pela definição dessas normas: vale que \( \textrm{dist}_{\textrm{Manhattan}}  \geq \textrm{dist}_{\textrm{euclidiana}} \). Para o TATT foi observado o mesmo comportamento.
+
+\subsection{Tempo por distância}
+
+Nesse caso, também foi fixado o algoritmo como sendo o de Christofides. Não houve diferença significativa entre os tempos de execução (nem para o TATT). De fato, o gráfico possui tempos tão semelhantes que optou-se por omiti-lo: sua visualização não agrega muito, e os dados podem ser consultados nas tabelas apresentadas anteriormente.
+
+Um argumento que poderia favorecer o tempo da distância de Manhattan é o fato de ela trabalhar apenas com números inteiros, devido ao fato de as coordenadas dos pontos sempre serem inteiras também. Isso poderia facilitar eventuais cálculos, ao se evitar trabalhar com pontos flutuantes. Mas isso certamente não poderia ser um fator influente nesta implementação, porque optou por sempre representar as distâncias como \textit{floats}.
+
+\subsection{Tempo por algoritmo}
+
+Para essa comparação, assim como na próxima, foi fixado a métrica como sendo a distância euclidiana. Foi feito um ajuste na escala do gráfico: nesse caso é levado em consideração o \textit{tamanho} da instância propriamente dita, ao invés do expoente usado para gerar a instância, para trazer um melhor senso de escala e facilitar a visualização.
+
 \begin{figure} [H]
 	\includegraphics[width=9cm]{tempo_vs}
 	\centering
 \end{figure}
+
+O TATT supera, e muito, o algoritmo de Christofides em termos de velocidade. Porém, isso é totalmente esperado. O custo do TATT é dominado pela computação da árvore geradora mínima (AGM). O algoritmo usado para computar a AGM, na \texttt{networkx}, é o algoritmo de Kruskal, cuja complexidade é \( \Theta(E \log V) \). Por outro lado, o custo do algoritmo de Christofides é consideravelmente maior, sendo dominado pela computação do \textit{matching} de peso mínimo. De acordo com a documentação da \texttt{networkx}, essa etapa é cúbica no número de vértices do grafo.
+
+Apesar de não ter sido possível rodar \textit{branch and bound} em tempo hábil, vale à pena fazer um breve interlúdio. Comparando-se a custosa execução do BNB para \( n = 12 \) cidades, concluída em 28 minutos, com uma instância 80 vezes maior (\( n = 2^{10} \)) do TATT, necessitando apenas de um milésimo do tempo: apesar de aproximado, o TATT é muito mais viável na prática.
+
+\subsection{Custo por algoritmo}
+
+Apesar de compensar muito em tempo, o TATT \textit{pode} deixar a desejar em termos do ciclo encontrado. O custo obtido pelo algoritmo de Christofides é consistentemente menor. Novamente, esse resultado está totalmente dentro do esperado: o algoritmo de Christofides é 1.5 aproximado e o TATT é 2 aproximado. Na verdade, na prática, a média da proporção de custo até favoreceu o TATT: 1.17 (o esperado seria \( \approx 1.33 \)).
 
 \begin{figure} [H]
 	\includegraphics[width=9cm]{custo_vs}
@@ -192,6 +216,14 @@ Após o processamento dos dados do \textit{DataFrame}, obteve-se as seguintes ta
 \end{figure}
 
 \section{Conclusão}
+
+A principal lição aprendida com esse trabalho foi a inviabilidade dos algoritmos exponenciais. Especialmente pelo fato de o \textit{branch and bound} não ter apresentado o desempenho necessário, nem mesmo rodando para o limite inferior de tamanho de instância proposto, de \( n = 16 \). Em comparação, os algoritmos aproximativos fazem muito mais sentido para aplicações práticas, que podem escalar consideravelmente.
+
+Em termos de implementação, foi realmente muito mais simples implementar o TATT e o algoritmo de Christofides. No entanto, isso não significa que desenvolver esses algoritmos não trouxe aprendizado nenhum. Pelo contrário: foi apenas passando por cada etapa que se tornou possível entendê-los por completo. Quanto ao BNB, houve mais desafio, mas também menos resultado. Certamente é possível otimizar a função de \textit{bound} para deixar o algoritmo viável pelo menos para a instância \( n = 16 \).
+
+O trabalho também deu oportunidade de desenvolver diversas habilidades ``tangentes'', que não estão relacionadas ao propósito didático da atividade. Por exemplo, os testes usando o \texttt{pytest}, fazendo uso de \textit{fixtures} e com captura de exceções. Além disso, também foi um primeiro contato com a biblioteca \texttt{networkx}, que apresenta grande potencial para diversas aplicações. Outros primeiros contatos incluem o paralelismo e a biblioteca \texttt{numba}, em tentativas sem sucesso de otimizar o programa.
+
+Em suma, o Trabalho Prático 2 da disciplina de Algoritmos II permitiu um aprofundamento maior no contexto de algoritmos exponenciais e aproximativos, possibilitado por meio de um contato mais íntimo com a linguagem de programação Python.
 
 % \printbibliography
 
