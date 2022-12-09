@@ -1,10 +1,10 @@
 # Trabalho Prático II - Algoritmos II (2022/2)
 
-# Dependências
+## Dependências
 
-Para rodar o programa principal necessário ter as bibliotecas `networkx` e `pandas`. Para rodar os testes, é necessário usar a biblioteca `pytest`.
+Para rodar o programa principal é necessário ter as bibliotecas `networkx` e `pandas`. Para rodar os testes, é necessário usar a biblioteca `pytest`.
 
-# Execução
+## Execução
 
 Para rodar o programa principal, você deve:
 
