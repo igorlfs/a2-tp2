@@ -12,7 +12,7 @@ def run() -> None:
     data: list[list] = []
     for i in range(4, 11):
         for metric in ("Euclidiana", "Manhattan"):
-            instance: nx.Graph = generate_instances(i, metric)
+            instance: nx.Graph = generate_instances(2**i, metric)
             for algorithm in ("Twice Around The Tree", "Christofides"):
                 execution: list = measure_algorithm(algorithm, instance, metric, i)
                 data.append(execution)

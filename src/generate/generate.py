@@ -27,7 +27,7 @@ def generate_points(number_of_points: int, floor: int, ceil: int) -> set:
 
 def generate_instances(size: int, metric: str) -> nx.Graph:
     """Gere instâncias do problema do caixeiro viajante."""
-    points: set[tuple[int, int]] = generate_points(2**size, 0, 4000)
+    points: set[tuple[int, int]] = generate_points(size, 0, 4000)
     matrix: np.ndarray = calculate_distance(points, metric)
     graph: nx.Graph = nx.from_numpy_array(matrix)
     return graph
