@@ -1,8 +1,7 @@
 """Abstrai a implementação dos algoritmos para solução do TSP."""
 import networkx as nx
 
-from src.algorithms import (branch_and_bound, christofides,
-                            twice_around_the_tree)
+from src.algorithms import branch_and_bound, christofides, twice_around_the_tree
 
 
 def tsp_solver(algorithm: str, graph: nx.Graph) -> float:

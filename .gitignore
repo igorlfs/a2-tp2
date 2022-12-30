@@ -9,3 +9,4 @@ docs/relatório.*
 .ruff_cache
 .pytest_cache
 .jukit
+.coverage
